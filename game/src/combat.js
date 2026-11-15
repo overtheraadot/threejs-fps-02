@@ -205,7 +205,7 @@ export function createCombat(scene, world, hooks) {
       if (hit) {
         _to.set(target.position.x, target.position.y + 1.15, target.position.z);
         addTracer(_from, _to, ENEMY_HEX);
-        const damage = 9 + Math.floor(Math.random() * 7);
+        const damage = 8 + Math.floor(Math.random() * 6);
         hooks.damageTarget(target, damage, 'bullet', bot);
       } else {
         // Miss: the tracer lands near the target, off by up to a metre.
