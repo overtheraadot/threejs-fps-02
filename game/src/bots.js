@@ -163,7 +163,7 @@ export function createBot(scene, world, options) {
     }
   }
 
-  function fireAt(now, ctx) {
+  function fireAt(now, ctx, dt) {
     if (bot.burstLeft <= 0) {
       if (now < bot.pauseUntil) return;
       bot.burstLeft = 3 + Math.floor(Math.random() * 3);
@@ -182,12 +182,12 @@ export function createBot(scene, world, options) {
     const dz = target.position.z - state.position.z;
     const dist = Math.hypot(dx, dy, dz) || 1;
     // Hit chance falls with distance and target speed, rises with skill.
-    let chance = 0.46 - dist * 0.013;
+    let chance = 0.40 - dist * 0.013;
     chance *= bot.skill;
     const targetSpeed = target.velocity ? Math.hypot(target.velocity.x, target.velocity.z) : 0;
     if (targetSpeed > 3) chance *= 0.7;
     if (target.crouching) chance *= 0.8;
-    chance = Math.max(0.05, Math.min(0.6, chance));
+    chance = Math.max(0.05, Math.min(0.55, chance));
     ctx.botShoot(bot, target, chance, dist);
   }
 
@@ -240,7 +240,7 @@ export function createBot(scene, world, options) {
       // VEX: stay near the player, engage what she sees.
       if (seenRecently && reacted && bot.target) {
         aimAtTarget(dt);
-        fireAt(now, ctx);
+        fireAt(now, ctx, dt);
         strafe(dt, now);
       } else {
         const px = ctx.player.position.x;
@@ -265,7 +265,7 @@ export function createBot(scene, world, options) {
     if (seenRecently && reacted && bot.target) {
       bot.mode = 'engage';
       aimAtTarget(dt);
-      fireAt(now, ctx);
+      fireAt(now, ctx, dt);
       // Flank: if the target has not moved much, slip to a side node.
       if (now > bot.flankUntil) {
         bot.flankUntil = now + 6 + Math.random() * 4;
